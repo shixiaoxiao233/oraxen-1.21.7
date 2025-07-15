@@ -1,0 +1,37 @@
+name: aaa
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  workflow_dispatch:    
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v2
+
+      # Set up JDK
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 21
+
+      # Grant execute permission for gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Build JAR file with Gradle
+      - name: Build JAR with Gradle
+        run: ./gradlew build
+
+      # Upload the JAR file as artifact
+      - name: Upload JAR file as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-jar-file
+          path: build/libs/*.jar
